@@ -6,11 +6,11 @@ class MediaProvider extends ChangeNotifier {
   XFile? selectedImage;
   bool loading = false;
 
-  Future<void> pickImage() async {
+  Future<void> pickImage(ImageSource src) async {
     loading = true;
     notifyListeners();
     try {
-      selectedImage = await ImagePickerRepository().pickImage();
+      selectedImage = await ImagePickerRepository().pickImage(src);
       notifyListeners();
     } catch (e) {
       selectedImage = null;
@@ -19,5 +19,11 @@ class MediaProvider extends ChangeNotifier {
       loading = false;
       notifyListeners();
     }
+  }
+
+  void reset() {
+    selectedImage = null;
+    loading = false;
+    notifyListeners();
   }
 }
