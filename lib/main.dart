@@ -5,8 +5,8 @@ import 'package:smile_checker/providers/gemini_provider.dart';
 import 'package:smile_checker/providers/media_provider.dart';
 import 'package:smile_checker/screens/home_screen.dart';
 
-void main() async {
-  await dotenv.load(fileName: '.env');
+Future<void> main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 

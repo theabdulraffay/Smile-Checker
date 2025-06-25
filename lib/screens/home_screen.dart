@@ -17,6 +17,18 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await mediaProvider.pickImage();
+          if (mediaProvider.selectedImage != null) {
+            final imageBytes = await mediaProvider.selectedImage!.readAsBytes();
+            await geminiProvider.generateTextFromImage(
+              prompt:
+                  'You are a dental health care assistant. Check the dental situation and give a score between 1- 10. Also analyze the teeths and give your feedback. Keep your answer short and concise. \n If the image is not clear, say "Image not clear". or if image is not related to dental situation, say "Image not related to dental situation".',
+              imagebyte: imageBytes,
+            );
+          } else {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('No image selected.')));
+          }
         },
         tooltip: 'Upload Image',
         child: const Icon(Icons.upload_file),
@@ -36,6 +48,13 @@ class HomeScreen extends StatelessWidget {
               Image.file(File(mediaProvider.selectedImage!.path), height: 200)
             else
               const Text('No image selected.'),
+
+            const SizedBox(height: 20),
+            if (geminiProvider.responseText != null)
+              Text(
+                geminiProvider.responseText!,
+                style: const TextStyle(fontSize: 16),
+              ),
           ],
         ),
       ),
